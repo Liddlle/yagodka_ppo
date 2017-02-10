@@ -1,4 +1,4 @@
-Speed_Dating_Data <- read_csv("~/krasotochki/Speed Dating Data.csv")
+Speed_Dating_Data <- read_csv("~/yagodka_ppo/Speed Dating Data.csv")
 
 library(dplyr)
 uniq = Speed_Dating_Data %>% group_by(iid,age,gender) %>% tally()
