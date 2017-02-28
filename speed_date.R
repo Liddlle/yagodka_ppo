@@ -17,8 +17,8 @@ Speed_Dating_Data$goal = plyr::revalue(Speed_Dating_Data$goal, c("1"="Seemed lik
                                                                  "5"="To say I did it", 
                                                                  "6"="Other"))
 #тоже самое надо для fields of study
+uniq = Speed_Dating_Data %>% group_by(iid,age,gender, field_cd,race,imprelig,goal,imprace,exphappy) %>% tally()
 
-uniq = Speed_Dating_Data %>% group_by(iid,age,gender, field_cd,race,imprelig,goal,imprace,exphappy,dec_o) %>% tally()
 
 library(plotly)
 library(ggplot2)
@@ -61,7 +61,21 @@ t.test(exphappy~factor(gender), data = na.omit(select(uniq, age, gender,exphappy
 
 
 
+
 ggplot(data=na.omit(select(uniq, age,goal)), aes(age, fill = goal, colour = goal)) +
   geom_density(alpha = 0.1)
-ggplot(data=na.omit(select(uniq, age, gender,exphappy,goal)), aes(x=age, y = (exphappy),fill = factor(gender))) +
-  geom_point()+ facet_wrap(~ goal) +ggplotly()
+
+
+ggplot(data=na.omit(select(uniq, age, gender,exphappy,goal)), aes(x=age, y = (exphappy),color = factor(gender))) +
+  geom_point()+ facet_wrap(~ goal) 
+
+
+
+num_match = Speed_Dating_Data %>% group_by(iid,age,gender, field_cd,race,imprelig,goal,imprace,exphappy) %>% 
+  dplyr::summarise(n_dec = sum(dec), n_deco = sum(dec_o), n_match = sum(match))
+num_match = num_match %>% filter(as.character(goal) != 'Other')
+
+ggplot(data=na.omit(select(num_match, age, gender,n_match,n_dec))) +
+         geom_point(aes(x=age, y = n_dec, color = factor(gender),size= n_match))+ facet_wrap(~ goal) 
+
+                                                                                                                                                                            
